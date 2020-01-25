@@ -1,5 +1,6 @@
 import json
 import base64
+import enum
 from . import db, login_manager
 from flask import current_app
 from flask_login import UserMixin
@@ -8,12 +9,95 @@ from itsdangerous import BadSignature, SignatureExpired
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
+class EventCategory(enum.Enum):
+    food_drink_alc = "Food/Drink"
+    food_drink = "Food/Drink Non-Alcoholic"
+    fitness = "Fitness"
+    learn = "Learn"
+    field_trip = "Field Trip"
+
+
+association_table = db.Table(
+    "association",
+    db.metadata,
+    db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
+    db.Column("event_id", db.Integer, db.ForeignKey("event.id")),
+)
+
+
+class Event(db.Model):
+    __tablename__ = "events"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), nullable=False)
+    date_time = db.Column(db.DateTime, nullable=False)
+    category = db.Column(db.Enum(EventCategory), nullable=False)
+    host = db.Column(db.Integer, db.ForeignKey("users.id"))
+
+    @staticmethod
+    def generate_test_event():
+        event = Event(
+            name="Ultimate Frisbee 101", date_time="", category=EventCategory.fitness
+        )
+        db.session.add(event)
+        db.session.commit()
+        return event
+
+    @property
+    def serialize(self):
+        """Return object data in serializeable format"""
+        return {
+            "id": self.id,
+            "name": self.name,
+            "date_time": self.date_time,
+            "category": self.category,
+        }
+
+    @staticmethod
+    def serialize_list(events):
+        json_events = []
+        for event in events:
+            json_events.append(event.serialize)
+        return json_events
+
+
+class Company(db.Model):
+    __tablename__ = "companies"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), nullable=False)
+    employees = db.relationship("User", backref="companies", lazy="dynamic")
+
+    @property
+    def serialize(self):
+        """Return object data in serializeable format"""
+        return {"id": self.id, "name": self.name, "employees": self.employees}
+
+    @staticmethod
+    def serialize_list(companies):
+        json_companies = []
+        for company in companies:
+            json_companies.append(company.serialize)
+        return json_companies
+
+    @staticmethod
+    def generate_test_company():
+        company = Company(name="Really Good Company")
+        db.session.add(company)
+        db.session.commit()
+        return company
+
+
 class User(UserMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
     email = db.Column(db.String(64), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
+    coffee_dates = db.Column(db.boolean, nullable=False)
+    hosted_events = db.Column(db.Integer, db.ForeignKey("event.id"))
+    company = db.Column(db.Integer, db.ForeignKey("company.id"))
+    attended_events = db.relationship(
+        "Event", secondary=association_table, back_populates="users"
+    )
 
     @property
     def password(self):
