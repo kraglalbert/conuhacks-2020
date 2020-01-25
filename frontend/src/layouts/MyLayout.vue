@@ -11,20 +11,13 @@
           aria-label="Menu"
         />
 
-        <q-toolbar-title>
-          Welcome to your Wellness Hub
-        </q-toolbar-title>
+        <q-toolbar-title>Welcome to your Wellness Hub</q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-      content-class="bg-grey-2"
-    >
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered content-class="bg-grey-2">
       <q-list>
         <q-item-label header>Essential Links</q-item-label>
         <q-item clickable tag="a" target="_blank" href="https://quasar.dev">
@@ -92,12 +85,11 @@
 
 <script>
 export default {
-  name: 'MyLayout',
-
-  data () {
+  name: "MyLayout",
+  data() {
     return {
       leftDrawerOpen: false
-    }
+    };
   }
-}
+};
 </script>
