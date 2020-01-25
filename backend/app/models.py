@@ -16,12 +16,9 @@ class EventCategory(enum.Enum):
     learn = "Learn"
     field_trip = "Field Trip"
 
-
-association_table = db.Table(
-    "association",
-    db.metadata,
-    db.Column("user_id", db.Integer, db.ForeignKey("users.id")),
-    db.Column("event_id", db.Integer, db.ForeignKey("events.id")),
+association_table = db.Table('association', db.metadata,
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+    db.Column('event_id', db.Integer, db.ForeignKey('events.id'))
 )
 
 
@@ -32,6 +29,9 @@ class Event(db.Model):
     date_time = db.Column(db.DateTime, nullable=False)
     category = db.Column(db.Enum(EventCategory), nullable=False)
     host = db.Column(db.Integer, db.ForeignKey("users.id"))
+    attendees = db.relationship(
+        "User",
+        secondary=association_table)
 
     @staticmethod
     def generate_test_event():
