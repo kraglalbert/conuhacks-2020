@@ -5,7 +5,7 @@ from .. import db
 from app.models import Event, Company, User
 
 
-@users.route("/", methods=["GET"])
+@users.route("", methods=["GET"])
 def get_all_users():
     users = User.query.all()
     return jsonify(User.serialize_list(users))

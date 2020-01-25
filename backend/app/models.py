@@ -64,12 +64,13 @@ class Company(db.Model):
     __tablename__ = "companies"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
+    location = db.Column(db.String(64), nullable=False)
     employees = db.relationship("User", backref="companies", lazy="dynamic")
 
     @property
     def serialize(self):
         """Return object data in serializeable format"""
-        return {"id": self.id, "name": self.name, "employees": self.employees}
+        return {"id": self.id, "name": self.name, "location": self.location, "employees": self.employees}
 
     @staticmethod
     def serialize_list(companies):
@@ -80,10 +81,22 @@ class Company(db.Model):
 
     @staticmethod
     def generate_test_company():
-        company = Company(name="Really Good Company")
+        company = Company(name="Really Good Company", location="Montreal")
         db.session.add(company)
         db.session.commit()
         return company
+
+    @staticmethod
+    def validate_company(name, city):
+        company = Company.query.filter_by(name=name).first()
+        if company is None:
+            company = Company(name=name, location=city)
+            db.session.add(company)
+            db.session.commit()
+            return company
+        else:
+            return company
+
 
 
 class User(UserMixin, db.Model):
