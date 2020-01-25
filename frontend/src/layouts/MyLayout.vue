@@ -5,7 +5,7 @@
         <q-toolbar-title>Welcome to your Wellness Hub</q-toolbar-title>
 
         <div>
-          <q-btn icon="home" color="secondary" to="/"/>
+          <q-btn icon="home" color="secondary" to="/dashboard"/>
         </div>
       </q-toolbar>
     </q-header>
