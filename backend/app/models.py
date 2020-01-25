@@ -16,16 +16,20 @@ class EventCategory(enum.Enum):
     learn = "Learn"
     field_trip = "Field Trip"
 
+
 class Event(db.model):
     __tablename__ = "events"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
-    date_time = db.Column(db.date_time, nullable=False)
+    date_time = db.Column(db.DateTime, nullable=False)
     category = db.Column(db.Enum(EventCategory), nullable=False)
-    host = db.relationship('User', backref='events', lazy='dynamic')
+    host = db.Column(db.Integer, db.ForeignKey("events.id"))
+
     @staticmethod
     def generate_test_event():
-        event = Event(name="Ultimate Frisbee 101", date_time="", category=EventCategory.fitness)
+        event = Event(
+            name="Ultimate Frisbee 101", date_time="", category=EventCategory.fitness
+        )
         db.session.add(event)
         db.session.commit()
         return event
@@ -47,27 +51,25 @@ class Event(db.model):
             json_events.append(event.serialize)
         return json_events
 
+
 class Company(db.Model):
     __tablename__ = "companies"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
-    employees = db.relationship('Company', backref='users', lazy='dynamic')
+    employees = db.relationship("Company", backref="users", lazy="dynamic")
 
     @property
     def serialize(self):
         """Return object data in serializeable format"""
-        return {
-            "id": self.id,
-            "name": self.name,
-        }
-    
+        return {"id": self.id, "name": self.name, "employees": self.employees}
+
     @staticmethod
     def generate_test_company():
         company = Company(name="Really Good Company")
         db.session.add(company)
         db.session.commit()
         return company
-    
+
 
 class User(UserMixin, db.Model):
     __tablename__ = "users"
@@ -75,9 +77,9 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(64), nullable=False)
     email = db.Column(db.String(64), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
-    coffee_dates = db.Column(db.boolean, nullable=False)
-    hosted_events = Column(Integer, ForeignKey('event.id'))
-    company = Column(Integer, ForeignKey('company.id'))
+    coffee_dates = db.Column(db.Boolean, nullable=False)
+    hosted_events = db.relationship("Event", backref="users", lazy="dynamic")
+    company = db.Column(db.Integer, db.ForeignKey("companies.id"))
 
     @property
     def password(self):
