@@ -17,13 +17,13 @@ class EventCategory(enum.Enum):
     field_trip = "Field Trip"
 
 
-class Event(db.model):
+class Event(db.Model):
     __tablename__ = "events"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
     date_time = db.Column(db.DateTime, nullable=False)
     category = db.Column(db.Enum(EventCategory), nullable=False)
-    host = db.Column(db.Integer, db.ForeignKey("events.id"))
+    host = db.Column(db.Integer, db.ForeignKey("users.id"))
 
     @staticmethod
     def generate_test_event():
@@ -56,12 +56,19 @@ class Company(db.Model):
     __tablename__ = "companies"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
-    employees = db.relationship("Company", backref="users", lazy="dynamic")
+    employees = db.relationship("User", backref="companies", lazy="dynamic")
 
     @property
     def serialize(self):
         """Return object data in serializeable format"""
         return {"id": self.id, "name": self.name, "employees": self.employees}
+
+    @staticmethod
+    def serialize_list(companies):
+        json_companies = []
+        for company in companies:
+            json_companies.append(company.serialize)
+        return json_companies
 
     @staticmethod
     def generate_test_company():
