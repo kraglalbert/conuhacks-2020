@@ -3,7 +3,7 @@ from flask_login import login_required
 from datetime import datetime
 from . import events
 from .. import db
-from app.models import Event, Company, User
+from app.models import Event, Company, User, EventCategory
 
 
 @events.route("", methods=["GET"])
@@ -12,6 +12,17 @@ def get_all_events():
     return jsonify(Event.serialize_list(events))
 
 
+# filter events by various criteria
+@events.route("/filter", methods=["GET"])
+def get_events_by_filter():
+    category = request.args.get("category")
+
+    if category is not None:
+        events = Event.query.filter_by(category=EventCategory(category)).all()
+        return jsonify(Event.serialize_list(events))
+
+
+# create a new event
 @events.route("", methods=["POST"])
 def create_event():
     data = request.get_json(force=True)
@@ -37,7 +48,6 @@ def create_event():
     if host is None:
         abort(400, "Event host does not exist")
 
-    # format
     datetime_obj = datetime.strptime(datetime_str, "%D-%M-%Y %I:%M%p")
     new_event = Event(
         name=event_name,
