@@ -62,6 +62,28 @@ def register():
     db.session.commit()
     return jsonify(new_user.serialize)
 
+# register for coffee dates
+@account.route("/coffee", methods=["POST"])
+def update_coffee():
+        data = request.get_json(force=True)
+        id = data.get("id")
+        coffee = data.get("coffee")
+
+        if id == "":
+            abort(400, "Need user ID to update coffee dates.")
+
+        user = User.query.filter_by(id=id).first()
+        if user is None:
+            abort(400, "No user with this ID exists")
+        
+        if coffee == 'true':
+            user.coffee_dates = True
+        else:
+            user.coffee_dates = False
+
+        db.session.add(user)
+        db.session.commit()
+        return jsonify(user.serialize)
 
 # log out an existing user
 @account.route("/logout")

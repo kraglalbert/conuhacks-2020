@@ -153,6 +153,7 @@ class User(UserMixin, db.Model):
             "id": self.id,
             "name": self.name,
             "email": self.email,
+            "coffee": self.coffee_dates,
             "password_hash": self.password_hash,
         }
 
