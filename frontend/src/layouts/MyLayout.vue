@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header>
       <q-toolbar>
         <q-btn
           flat
@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Quasar App
+          Welcome to your Wellness Hub
         </q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
