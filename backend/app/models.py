@@ -16,14 +16,13 @@ class EventCategory(enum.Enum):
     learn = "Learn"
     field_trip = "Field Trip"
 
-class Event(Event, db.model):
+class Event(db.model):
     __tablename__ = "events"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
     date_time = db.Column(db.date_time, nullable=False)
-    # time = db.Column(db.time, nullable=False)
-    category = db.Column(Enum(EventCategory), nullable=False)
-
+    category = db.Column(db.Enum(EventCategory), nullable=False)
+    host = db.relationship('User', backref='events', lazy='dynamic')
     @staticmethod
     def generate_test_event():
         event = Event(name="Ultimate Frisbee 101", date_time="", category=EventCategory.fitness)
@@ -48,10 +47,11 @@ class Event(Event, db.model):
             json_events.append(event.serialize)
         return json_events
 
-class Company(Company, db.Model):
+class Company(db.Model):
     __tablename__ = "companies"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
+    employees = db.relationship('Company', backref='users', lazy='dynamic')
 
     @property
     def serialize(self):
@@ -76,6 +76,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(64), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
     coffee_dates = db.Column(db.boolean, nullable=False)
+    hosted_events = Column(Integer, ForeignKey('event.id'))
+    company = Column(Integer, ForeignKey('company.id'))
 
     @property
     def password(self):
