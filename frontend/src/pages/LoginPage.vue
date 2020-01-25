@@ -1,8 +1,12 @@
 <template>
   <q-layout>
     <q-page-container>
-      <q-banner class="bg-primary" style="background-color: #ee8572"></q-banner>
-      <q-page class="flex column flex-center">
+      <!-- PUT APP NAME HERE -->
+      <q-banner class="login_banner">
+        <div style="font-size: 25px; font-weight: bold;">Wellness Hub</div>
+      </q-banner>
+
+      <q-page class="flex column flex-center login_page">
         <div class="q-gutter-y-md" style="min-width: 300px">
           <!-- ee8572 -->
           <q-card>
@@ -51,13 +55,33 @@
                   />
 
                   <div>
-                    <q-btn label="Log In" type="submit" color="primary" />
+                    <q-btn label="Log In" type="submit" style="background:#678a74; color:white" />
                   </div>
                 </q-form>
               </q-tab-panel>
 
               <q-tab-panel name="signup">
                 <q-form @submit="onSignUp" class="q-gutter-md">
+                  <q-input
+                    filled
+                    v-model="name"
+                    label="Location"
+                    hint="Enter your location"
+                    lazy-rules
+                    :rules="[
+                  val => (val && val.length > 0) || 'Please enter your location'
+                  ]"
+                  />
+                  <q-input
+                    filled
+                    v-model="name"
+                    label="Company"
+                    hint="Enter your company"
+                    lazy-rules
+                    :rules="[
+                      val => (val && val.length > 0) || 'Please enter your company'
+                    ]"
+                  />
                   <q-input
                     filled
                     v-model="name"
@@ -111,7 +135,7 @@
                   />
 
                   <div>
-                    <q-btn label="Sign Up" type="submit" color="primary" />
+                    <q-btn label="Sign Up" type="submit" style="background:#678a74; color:white" />
                   </div>
                 </q-form>
               </q-tab-panel>
@@ -197,3 +221,13 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.login_banner {
+  background-color: #ee8572;
+  color: white;
+}
+.login_page {
+  background-color: #ffeadb;
+}
+</style>
