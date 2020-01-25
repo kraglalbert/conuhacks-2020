@@ -1,5 +1,6 @@
 import json
 import base64
+import enum
 from . import db, login_manager
 from flask import current_app
 from flask_login import UserMixin
@@ -8,12 +9,73 @@ from itsdangerous import BadSignature, SignatureExpired
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
+class EventCategory(enum.Enum):
+    food_drink_alc = "Food/Drink"
+    food_drink = "Food/Drink Non-Alcoholic"
+    fitness = "Fitness"
+    learn = "Learn"
+    field_trip = "Field Trip"
+
+class Event(Event, db.model):
+    __tablename__ = "events"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), nullable=False)
+    date_time = db.Column(db.date_time, nullable=False)
+    # time = db.Column(db.time, nullable=False)
+    category = db.Column(Enum(EventCategory), nullable=False)
+
+    @staticmethod
+    def generate_test_event():
+        event = Event(name="Ultimate Frisbee 101", date_time="", category=EventCategory.fitness)
+        db.session.add(event)
+        db.session.commit()
+        return event
+
+    @property
+    def serialize(self):
+        """Return object data in serializeable format"""
+        return {
+            "id": self.id,
+            "name": self.name,
+            "date_time": self.date_time,
+            "category": self.category,
+        }
+
+    @staticmethod
+    def serialize_list(events):
+        json_events = []
+        for event in events:
+            json_events.append(event.serialize)
+        return json_events
+
+class Company(Company, db.Model):
+    __tablename__ = "companies"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), nullable=False)
+
+    @property
+    def serialize(self):
+        """Return object data in serializeable format"""
+        return {
+            "id": self.id,
+            "name": self.name,
+        }
+    
+    @staticmethod
+    def generate_test_company():
+        company = Company(name="Really Good Company")
+        db.session.add(company)
+        db.session.commit()
+        return company
+    
+
 class User(UserMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
     email = db.Column(db.String(64), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
+    coffee_dates = db.Column(db.boolean, nullable=False)
 
     @property
     def password(self):
