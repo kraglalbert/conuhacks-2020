@@ -16,10 +16,32 @@ def get_all_events():
 @events.route("/filter", methods=["GET"])
 def get_events_by_filter():
     category = request.args.get("category")
+    company_id = request.args.get("company_id")
+
+    events = []
+
+    if company_id is None:
+        abort(400, "Must specify company ID")
+
+    # get all events from specified company
+    company = Company.query.filter_by(id=company_id).first()
+    if company is None:
+        abort(400, "Company does not exist")
+
+    for employee in company.employees:
+        events.extend(employee.hosted_events)
 
     if category is not None:
         events = Event.query.filter_by(category=EventCategory(category)).all()
-        return jsonify(Event.serialize_list(events))
+        events = list(
+            filter(
+                lambda event: User.query.filter_by(id=event.host).first().company
+                != company_id,
+                events,
+            )
+        )
+
+    return jsonify(Event.serialize_list(events))
 
 
 # create a new event
