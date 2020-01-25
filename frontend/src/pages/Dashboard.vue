@@ -1,21 +1,30 @@
 <template>
-  <q-page class="flex flex-left q-pl-xl row
-  ">
-    <dashitem itemName="Activities" image="rowing"/>
-    <dashitem itemName="Learning" image="accessibility"/>
-    <dashitem itemName="Coffee Date" image="local_cafe"/>
-    <dashitem itemName="Dining / Drinks" image="local_dining"/>
-    <dashitem itemName="Calendar" image="calendar_today"/>
+  <q-page class="flex center row q-gutter-md">
+    <div class="row q-gutter-md"> 
+      <div class="col"> 
+        <q-btn icon="rowing" label="Activities" stack color="dark" />
+      </div>
+      <div class="col"> 
+        <q-btn icon="accessibility" label="Learning" stack class="col" color="dark" />
+      </div>
+    </div>
+    <div class="row q-gutter-md">
+      <div class="col"> 
+        <q-btn icon="local_cafe" label="Coffee Date" stack class="col" color="dark" />
+      </div>
+      <div class="col"> 
+        <q-btn icon="local_dining" label="Dining / Drinks" stack class="col" color="dark" />
+      </div>
+      <div class="col"> 
+        <q-btn icon="calendar_today" label="Calendar" stack class="col" color="dark" />
+      </div>
+    </div>
   </q-page>
 </template>
 
 <script>
-import dashitem from '../components/DashItem.vue'
 
 export default {
-  name: 'Dashboard',
-  components: {
-      dashitem
-  }
+  name: 'Dashboard'
 }
 </script>
