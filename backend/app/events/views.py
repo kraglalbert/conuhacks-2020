@@ -22,6 +22,24 @@ def get_events_by_filter():
         return jsonify(Event.serialize_list(events))
 
 
+# delete event
+@events.route("/delete", methods=["DELETE"])
+def delete_event():
+    data = request.get_json(force=True)
+    event_id = data.get("event_id")
+    host_id = data.get("host_id")
+
+    event = Event.query.filter_by(id=event_id).first()
+
+    if event.host != host_id:
+        abort(400, "Event can only be deleted by the host of the event")
+
+    if Event.query.filter_by(id=event_id).first is None:
+        abort(400, "There are no events with this ID.")
+    
+    Event.query.filter_by(id=event_id).delete()
+
+
 # create a new event
 @events.route("", methods=["POST"])
 def create_event():
