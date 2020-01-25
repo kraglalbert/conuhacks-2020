@@ -44,6 +44,8 @@ def register():
     name = data.get("name")
     email = data.get("email")
     password = data.get("password")
+    company = data.get("company")
+    location = data.get("location")
 
     if name == "" or email == "" or password == "":
         abort(400, "Cannot have empty fields for user")
