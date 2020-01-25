@@ -3,6 +3,10 @@
     <q-header>
       <q-toolbar>
         <q-toolbar-title>Welcome to your Wellness Hub</q-toolbar-title>
+
+        <div>
+          <q-btn icon="home" color="secondary" to="/"/>
+        </div>
       </q-toolbar>
     </q-header>
 
