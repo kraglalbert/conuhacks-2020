@@ -20,8 +20,8 @@ class EventCategory(enum.Enum):
 association_table = db.Table(
     "association",
     db.metadata,
-    db.Column("user_id", db.Integer, db.ForeignKey("user.id")),
-    db.Column("event_id", db.Integer, db.ForeignKey("event.id")),
+    db.Column("user_id", db.Integer, db.ForeignKey("users.id")),
+    db.Column("event_id", db.Integer, db.ForeignKey("events.id")),
 )
 
 
@@ -92,9 +92,9 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(64), nullable=False)
     email = db.Column(db.String(64), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
-    coffee_dates = db.Column(db.boolean, nullable=False)
-    hosted_events = db.Column(db.Integer, db.ForeignKey("event.id"))
-    company = db.Column(db.Integer, db.ForeignKey("company.id"))
+    coffee_dates = db.Column(db.Boolean, nullable=False)
+    hosted_events = db.relationship("Event", backref="users", lazy="dynamic")
+    company = db.Column(db.Integer, db.ForeignKey("companies.id"))
     attended_events = db.relationship(
         "Event", secondary=association_table, back_populates="users"
     )
