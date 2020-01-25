@@ -3,7 +3,8 @@
     id="container"
     class="row"
   >
-    <div
+  
+    <q-btn
       class="row"
       style="min-width: 45px"
     >
@@ -14,7 +15,7 @@
           :size="'xl'"
         />
       </center>
-    </div>
+    </q-btn>
     <div class="row q-pl-md q-pt-md">
       <div>{{ itemName }}</div>
     </div>
@@ -27,6 +28,11 @@ export default {
   props: {
     itemName: String,
     image: String
+  },
+  framework: {
+    components: [
+      'QBtn'
+    ]
   }
 }
 </script>
