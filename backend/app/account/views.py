@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request, abort, make_response
 from flask_login import current_user, login_required, login_user, logout_user
 from . import account
 from .. import db
-from app.models import User
+from app.models import User, Company
 
 # log in an existing user
 @account.route("/login", methods=["POST"])
@@ -44,19 +44,46 @@ def register():
     name = data.get("name")
     email = data.get("email")
     password = data.get("password")
+    company = data.get("company")
+    location = data.get("location")
 
-    if name == "" or email == "" or password == "":
+    if name == "" or email == "" or password == "" or company == "" or location == "":
         abort(400, "Cannot have empty fields for user")
 
     user = User.query.filter_by(email=email).first()
     if user is not None:
         abort(400, "Account already exists with this email")
 
-    new_user = User(name=name, email=email, password=password)
+    company_id = Company.validate_company(company, location).id
+
+    new_user = User(name=name, email=email, password=password, coffee_dates=False, company=company_id)
+
     db.session.add(new_user)
     db.session.commit()
     return jsonify(new_user.serialize)
 
+# register for coffee dates
+@account.route("/coffee", methods=["POST"])
+def update_coffee():
+        data = request.get_json(force=True)
+        id = data.get("id")
+        coffee = data.get("coffee")
+
+        if id == "":
+            abort(400, "Need user ID to update coffee dates.")
+
+        user = User.query.filter_by(id=id).first()
+        if user is None:
+            abort(400, "No user with this ID exists")
+        
+        if coffee == 'true':
+            user.coffee_dates = True
+        else:
+            user.coffee_dates = False
+
+        db.session.add(user)
+        db.session.commit()
+        return jsonify(user.serialize)
 
 # log out an existing user
 @account.route("/logout")

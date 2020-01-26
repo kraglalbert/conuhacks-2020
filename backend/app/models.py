@@ -16,9 +16,12 @@ class EventCategory(enum.Enum):
     learn = "Learn"
     field_trip = "Field Trip"
 
-association_table = db.Table('association', db.metadata,
-    db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
-    db.Column('event_id', db.Integer, db.ForeignKey('events.id'))
+
+association_table = db.Table(
+    "association",
+    db.metadata,
+    db.Column("user_id", db.Integer, db.ForeignKey("users.id")),
+    db.Column("event_id", db.Integer, db.ForeignKey("events.id")),
 )
 
 
@@ -26,12 +29,12 @@ class Event(db.Model):
     __tablename__ = "events"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
+    description = db.Column(db.String(64))
+    location = db.Column(db.String(64))
     date_time = db.Column(db.DateTime, nullable=False)
     category = db.Column(db.Enum(EventCategory), nullable=False)
     host = db.Column(db.Integer, db.ForeignKey("users.id"))
-    attendees = db.relationship(
-        "User",
-        secondary=association_table)
+    attendees = db.relationship("User", secondary=association_table)
 
     @staticmethod
     def generate_test_event():
@@ -48,8 +51,12 @@ class Event(db.Model):
         return {
             "id": self.id,
             "name": self.name,
+            "description": self.description if self.description is not None else "",
             "date_time": self.date_time,
-            "category": self.category,
+            "location": self.location,
+            "category": self.category.value,
+            "host_id": self.host,
+            "attendees": User.serialize_list(self.attendees),
         }
 
     @staticmethod
@@ -64,12 +71,18 @@ class Company(db.Model):
     __tablename__ = "companies"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
+    location = db.Column(db.String(64), nullable=False)
     employees = db.relationship("User", backref="companies", lazy="dynamic")
 
     @property
     def serialize(self):
         """Return object data in serializeable format"""
-        return {"id": self.id, "name": self.name, "employees": self.employees}
+        return {
+            "id": self.id,
+            "name": self.name,
+            "location": self.location,
+            "employees": User.serialize_list(self.employees),
+        }
 
     @staticmethod
     def serialize_list(companies):
@@ -80,10 +93,21 @@ class Company(db.Model):
 
     @staticmethod
     def generate_test_company():
-        company = Company(name="Really Good Company")
+        company = Company(name="Really Good Company", location="Montreal")
         db.session.add(company)
         db.session.commit()
         return company
+
+    @staticmethod
+    def validate_company(name, city):
+        company = Company.query.filter_by(name=name).first()
+        if company is None:
+            company = Company(name=name, location=city)
+            db.session.add(company)
+            db.session.commit()
+            return company
+        else:
+            return company
 
 
 class User(UserMixin, db.Model):
@@ -140,6 +164,8 @@ class User(UserMixin, db.Model):
             "id": self.id,
             "name": self.name,
             "email": self.email,
+            "coffee_dates": self.coffee_dates,
+            "company_id": self.company,
             "password_hash": self.password_hash,
         }
 
