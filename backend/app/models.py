@@ -10,7 +10,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class EventCategory(enum.Enum):
-    food_drink_alc = "Food/Drink"
+    food_drink = "Food/Drink"
     activity = "Activities"
     learn = "Learning"
     field_trip = "Field Trip"
@@ -178,14 +178,14 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return "<User %r>" % self.email
-    
+
     def find_coffee_date(self):
         users = User.query.all()
         for user in users:
             if user.coffee_dates == True and user.id != self.id:
                 return user
 
-        return None 
+        return None
 
 
 @login_manager.user_loader

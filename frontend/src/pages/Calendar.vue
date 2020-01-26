@@ -34,7 +34,7 @@ export default {
   data() {
     return {
       splitterModel: 50,
-      date: "2020/01/26",
+      date: moment(new Date()).format("YYYY/MM/DD"),
       events: [],
       event_dates: []
     };
@@ -49,8 +49,6 @@ export default {
       .then(resp => {
         this.events = resp.data;
         this.events.forEach(e => {
-          console.log(e.id);
-
           this.event_dates.push(moment(e.date_time).format("YYYY/MM/DD"));
         });
       });
