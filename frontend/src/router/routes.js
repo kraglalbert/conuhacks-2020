@@ -7,31 +7,37 @@ const routes = [
   {
     path: "/home",
     component: () => import("layouts/MyLayout.vue"),
+    meta: { requiresAuth: true },
     children: [{ path: "", component: () => import("pages/Dashboard.vue") }]
   },
   {
     path: "/calendar",
     component: () => import("layouts/MyLayout.vue"),
+    meta: { requiresAuth: true },
     children: [{ path: "", component: () => import("pages/Calendar.vue") }]
   },
   {
     path: "/dining",
     component: () => import("layouts/MyLayout.vue"),
+    meta: { requiresAuth: true },
     children: [{ path: "", component: () => import("pages/Dining.vue") }]
   },
   {
     path: "/coffee",
     component: () => import("layouts/MyLayout.vue"),
+    meta: { requiresAuth: true },
     children: [{ path: "", component: () => import("pages/Coffee.vue") }]
   },
   {
     path: "/activities",
     component: () => import("layouts/MyLayout.vue"),
+    meta: { requiresAuth: true },
     children: [{ path: "", component: () => import("pages/Activities.vue") }]
   },
   {
     path: "/learning",
     component: () => import("layouts/MyLayout.vue"),
+    meta: { requiresAuth: true },
     children: [{ path: "", component: () => import("pages/Learning.vue") }]
   }
 ];
