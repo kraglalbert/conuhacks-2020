@@ -1,17 +1,12 @@
 <template>
   <q-layout>
     <q-page-container>
-      <!-- PUT APP NAME HERE -->
       <q-banner class="login_banner">
         <div style="font-size: 25px; font-weight: bold;">Wellness Hub</div>
       </q-banner>
 
       <q-page class="flex column flex-center login_page">
-        <div
-          class="q-gutter-y-md"
-          style="min-width: 300px"
-        >
-          <!-- ee8572 -->
+        <div class="q-gutter-y-md" style="min-width: 400px">
           <q-card>
             <q-tabs
               v-model="tab"
@@ -22,27 +17,15 @@
               align="justify"
               narrow-indicator
             >
-              <q-tab
-                name="login"
-                label="Log In"
-              />
-              <q-tab
-                name="signup"
-                label="Sign Up"
-              />
+              <q-tab name="login" label="Log In" />
+              <q-tab name="signup" label="Sign Up" />
             </q-tabs>
 
             <q-separator />
 
-            <q-tab-panels
-              v-model="tab"
-              animated
-            >
+            <q-tab-panels v-model="tab" animated>
               <q-tab-panel name="login">
-                <q-form
-                  @submit="onLogIn"
-                  class="q-gutter-md"
-                >
+                <q-form @submit="onLogIn" class="q-gutter-md">
                   <q-input
                     filled
                     v-model="email"
@@ -70,20 +53,13 @@
                   />
 
                   <div>
-                    <q-btn
-                      label="Log In"
-                      type="submit"
-                      style="background:#678a74; color:white"
-                    />
+                    <q-btn label="Log In" type="submit" style="background:#678a74; color:white" />
                   </div>
                 </q-form>
               </q-tab-panel>
 
               <q-tab-panel name="signup">
-                <q-form
-                  @submit="onSignUp"
-                  class="q-gutter-md"
-                >
+                <q-form @submit="onSignUp" class="q-gutter-md">
                   <q-input
                     filled
                     v-model="name"
@@ -157,11 +133,7 @@
                   />
 
                   <div>
-                    <q-btn
-                      label="Sign Up"
-                      type="submit"
-                      style="background:#678a74; color:white"
-                    />
+                    <q-btn label="Sign Up" type="submit" style="background:#678a74; color:white" />
                   </div>
                 </q-form>
               </q-tab-panel>
@@ -176,7 +148,7 @@
 <script>
 export default {
   name: "LoginPage",
-  data () {
+  data() {
     return {
       name: null,
       email: null,
@@ -188,7 +160,7 @@ export default {
     };
   },
   methods: {
-    onLogIn () {
+    onLogIn() {
       let email = this.email;
       let password = this.password;
       this.$store
@@ -213,7 +185,7 @@ export default {
           });
         });
     },
-    onSignUp () {
+    onSignUp() {
       let name = this.name;
       let email = this.email;
       let password = this.password;
