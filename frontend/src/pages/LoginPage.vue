@@ -247,10 +247,10 @@ export default {
 
 <style lang="scss" scoped>
 .login_banner {
-  background-color: #ee8572;
+  background-color: $secondary;
   color: white;
 }
 .login_page {
-  background-color: #ffeadb;
+  background-color: $background;
 }
 </style>

@@ -1,9 +1,8 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header>
-      <q-toolbar>
+      <q-toolbar class="bg-secondary">
         <q-toolbar-title>Welcome to your Wellness Hub</q-toolbar-title>
-
         <div>
           <q-btn
             icon="home"
@@ -14,7 +13,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-page-container>
+    <q-page-container id="container">
       <router-view />
     </q-page-container>
   </q-layout>
@@ -30,3 +29,10 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+#container {
+  background-color: $background;
+  overflow: hidden !important;
+}
+</style>
