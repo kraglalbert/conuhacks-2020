@@ -29,9 +29,12 @@
             class="dashboard-button"
             stack
             color="primary"
-            to="/coffee"
+            @click="showCoffeeDatePopUp = true"
           />
         </div>
+        <q-dialog v-model="showCoffeeDatePopUp">
+          <CoffeeDatePopUp @dialog-closed="showCoffeeDatePopUp = false" />
+        </q-dialog>
         <div class="col">
           <q-btn
             icon="local_dining"
@@ -73,15 +76,18 @@
 
 <script>
 import HostEventPopUp from "../components/HostEventPopUp.vue";
+import CoffeeDatePopUp from "../components/CoffeeDatePopUp.vue";
 
 export default {
   name: "Dashboard",
   components: {
-    HostEventPopUp
+    HostEventPopUp,
+    CoffeeDatePopUp
   },
   data() {
     return {
-      showHostEventPopUp: false
+      showHostEventPopUp: false,
+      showCoffeeDatePopUp: false
     };
   }
 };

@@ -41,15 +41,8 @@ def find_coffee_date(id):
     if date is None:
         return jsonify({"result": False})
 
-    user.coffee_dates = False
-    db.session.add(user)
-    db.session.commit()
-    date.coffee_dates = False
-    db.session.add(date)
-    db.session.commit()
-
     # format: 12-12-2019 1:30PM
-    datetime_obj = datetime.strptime("31-01-2020 1:30PM", "%d-%m-%Y %I:%M%p")
+    datetime_obj = datetime.strptime("07-02-2020 1:30PM", "%d-%m-%Y %I:%M%p")
 
     event = Event(
         name="Coffee Date",
@@ -163,12 +156,8 @@ def get_all_events_for_user(id):
 
 
 # delete event
-@events.route("/delete", methods=["DELETE"])
-def delete_event():
-    data = request.get_json(force=True)
-    event_id = int(data.get("event_id"))
-    host_id = int(data.get("host_id"))
-
+@events.route("/delete/<int:event_id>/<int:host_id>", methods=["DELETE"])
+def delete_event(event_id, host_id):
     event = Event.query.filter_by(id=event_id).first()
 
     if event is None:
@@ -176,7 +165,7 @@ def delete_event():
 
     if event.host != host_id:
         abort(400, "Event can only be deleted by the host of the event")
-    
+
     cur_attendees = event.attendees
     for attendee in cur_attendees:
         attendee_events = attendee.attended_events
@@ -187,7 +176,7 @@ def delete_event():
     Event.query.filter_by(id=event_id).delete()
     db.session.commit()
 
-    return jsonify({"result": True})
+    return jsonify(event.serialize)
 
 
 # create a new event
