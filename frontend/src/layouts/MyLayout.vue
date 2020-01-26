@@ -4,11 +4,7 @@
       <q-toolbar class="bg-secondary">
         <q-toolbar-title>Welcome to your Wellness Hub</q-toolbar-title>
         <div>
-          <q-btn
-            icon="home"
-            color="secondary"
-            to="/home"
-          />
+          <q-btn flat round color="background" icon="home" to="/home" />
         </div>
       </q-toolbar>
     </q-header>
@@ -22,7 +18,7 @@
 <script>
 export default {
   name: "MyLayout",
-  data () {
+  data() {
     return {
       leftDrawerOpen: false
     };

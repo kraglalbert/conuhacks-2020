@@ -11,6 +11,21 @@ def get_all_events():
     events = Event.query.all()
     return jsonify(Event.serialize_list(events))
 
+# get hosted events 
+@events.route("/event-by-host/<int:id>", methods=["GET"])
+def get_events_by_host(id):
+    events = []
+
+    if id is None: 
+        abort(400, "Must specify host ID")
+
+    user = User.query.filter_by(id=id).first()
+
+    # get all events hosted by this user
+    if user is not None:
+        events.extend(user.hosted_events)
+
+    return jsonify(Event.serialize_list(events))
 
 # filter events by various criteria
 @events.route("/filter", methods=["GET"])
