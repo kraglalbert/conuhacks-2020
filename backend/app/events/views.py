@@ -187,8 +187,6 @@ def delete_event():
     Event.query.filter_by(id=event_id).delete()
     db.session.commit()
 
-    
-
     return jsonify({"result": True})
 
 
