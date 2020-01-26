@@ -178,6 +178,14 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return "<User %r>" % self.email
+    
+    def find_coffee_date(self):
+        users = User.query.all()
+        for user in users:
+            if user.coffee_dates == True and user.id != self.id:
+                return user
+
+        return None 
 
 
 @login_manager.user_loader

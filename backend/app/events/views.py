@@ -27,6 +27,26 @@ def get_events_by_host(id):
 
     return jsonify(Event.serialize_list(events))
 
+# find a coffee date
+@events.route("/find-coffee-date/<int:id>", methods=["GET"])
+def find_coffee_date(id):
+    if id is None: 
+        abort(400, "Must specify host ID")
+    
+    user = User.query.filter_by(id=id).first()
+    date = user.find_coffee_date()
+
+    if date is None:
+        return jsonify({'result':False})
+    else:
+        user.coffee = False
+        db.session.add(user)
+        db.session.commit()
+        date.coffee = False
+        db.session.add(date)
+        db.session.commit()
+        return jsonify(date.serialize)
+
 
 # update an event
 @events.route("/update", methods=["POST"])
