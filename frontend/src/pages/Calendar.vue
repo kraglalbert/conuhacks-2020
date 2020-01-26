@@ -10,7 +10,7 @@
           <q-date
             v-model="date"
             :events="event_dates"
-            event-color="secondary"
+            event-color="orange"
           />
         </div>
       </template>
@@ -22,21 +22,9 @@
           transition-prev="jump-up"
           transition-next="jump-up"
         >
-          <q-tab-panel 
-            v-for="e in event_dates"
-            :key="e"
-            :name="e"
-          >
-            <div class="text-h4 q-mb-md bg-secondary">Nice</div>
-            <p>description</p>
-          </q-tab-panel>
-
-          <q-tab-panel name="2019/02/06">
-            <div class="text-h4 q-mb">2019/02/06</div>
-            <p class="bg-accent">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
-          </q-tab-panel>
+            <q-tab-panel :name="date">
+                <CalendarItemList :events="events" :date="date" />
+            </q-tab-panel>
         </q-tab-panels>
       </template>
     </q-splitter>
@@ -44,17 +32,22 @@
 </template>
 
 <script>
-export default {
-  data () {
-    return {
-      splitterModel: 50,
-      date: '',
-      events: [],
-      event_dates: [],
+import moment from 'moment'
+import CalendarItemList from '../components/CalendarItemList.vue'
 
-    }
-  },
-  created: function() {
+export default {
+    components: {
+        CalendarItemList
+    },
+    data () {
+        return {
+            splitterModel: 50,
+            date: '2020/01/26',
+            events: [],
+            event_dates: [],
+        }
+    },
+    created: function() {
         this.$axios.get('/events/filter', {
             params: {
                 company_id: this.$store.state.currentUser.company_id
@@ -63,7 +56,8 @@ export default {
             this.events = resp.data
             this.events.forEach(e => {
                 console.log(e.id);
-                this.event_dates.push(e.date_time)
+                
+                this.event_dates.push(moment(e.date_time).format('YYYY/MM/DD'))
             });
         })
   }
