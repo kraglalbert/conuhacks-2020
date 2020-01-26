@@ -48,8 +48,9 @@ def get_events_by_filter():
 @events.route("/delete", methods=["DELETE"])
 def delete_event():
     data = request.get_json(force=True)
-    event_id = data.get("event_id")
-    host_id = data.get("host_id")
+    event_id = int(data.get("event_id"))
+    host_id = int(data.get("host_id"))
+    print("hiiiiiiiii")
 
     event = Event.query.filter_by(id=event_id).first()
 
@@ -59,8 +60,10 @@ def delete_event():
     if Event.query.filter_by(id=event_id).first is None:
         abort(400, "There are no events with this ID.")
     
+    event = Event.query.filter_by(id=event_id)
     Event.query.filter_by(id=event_id).delete()
 
+    return jsonify({'result':True})
 
 # create a new event
 @events.route("", methods=["POST"])
