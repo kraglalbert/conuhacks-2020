@@ -1,13 +1,23 @@
 <template>
-    <activity activityName="Hello World" date="1/1/2020"/>
+  <q-page class="flex justify-center">
+    <div class="row">
+      <div class="col">
+        <h4><strong>Activities</strong></h4>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col"><EventList category="Activities" /></div>
+    </div>
+  </q-page>
 </template>
 
 <script>
-import activity from '../components/Activity.vue'
+import EventList from "../components/EventList.vue";
 
 export default {
-    components: {
-        activity
-    }    
-}
+  name: "Activities",
+  components: {
+    EventList
+  }
+};
 </script>
