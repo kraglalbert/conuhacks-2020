@@ -1,7 +1,10 @@
 <template>
     <div>
         <div class="text-h4 q-mb " >{{event.name}}</div>
-        <p class="bg-">{{event.description}}</p>
+        <p>{{event.date_time}}</p>
+        <q-badge class="primary">{{event.category}}</q-badge>
+            <p>{{event.description}}</p>
+        <q-separator />
     </div>
 </template>
 
