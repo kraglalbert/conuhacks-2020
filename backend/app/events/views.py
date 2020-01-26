@@ -27,6 +27,54 @@ def get_events_by_host(id):
 
     return jsonify(Event.serialize_list(events))
 
+
+# update an event
+@events.route("/update", methods=["POST"])
+def update_event():
+    data = request.get_json(force=True)
+    event_name = data.get("name")
+    description = data.get("description")
+    location = data.get("location")
+    datetime_str = data.get("date_time")
+    host_id = int(data.get("host_id"))
+    event_id = int(data.get("event_id"))
+
+    if (
+        event_name == ""
+        or description == ""
+        or location == ""
+        or host_id == ""
+        or event_id == ""
+    ):
+        abort(400, "Cannot have empty fields for event")
+
+    event = Event.query.filter_by(id=event_id).first()
+
+    if event is None:
+        abort(400, "Event does not exist")
+
+    host = User.query.filter_by(id=host_id).first()
+    if host is None:
+        abort(400, "Event host does not exist")
+
+    if host_id != event.host:
+        abort(400, "Only the event host can edit the event")
+
+    # format: 12-12-2019 1:30PM
+    datetime_obj = datetime.strptime(datetime_str, "%d-%m-%Y %I:%M%p")
+
+    event.name = event_name
+    event.description = description
+    event.location = location
+    event.host = host_id
+    event.date_time = datetime_obj
+
+    db.session.add(event)
+    db.session.commit()
+
+    return jsonify(event.serialize)
+
+
 # filter events by various criteria
 @events.route("/filter", methods=["GET"])
 def get_events_by_filter():
