@@ -35,7 +35,7 @@
         <q-select
           v-model="eventCategory"
           filled
-          :options="options"
+          :options="categories"
           label="Event Category"
           lazy-rules
           :rules="[
@@ -63,7 +63,7 @@
           <template v-slot:append>
             <q-icon name="access_time" class="cursor-pointer">
               <q-popup-proxy transition-show="scale" transition-hide="scale">
-                <q-time v-model="time" />
+                <q-time v-model="eventTime" />
               </q-popup-proxy>
             </q-icon>
           </template>
@@ -111,11 +111,17 @@ export default {
       eventCategory: "",
       eventLocation: "",
       eventTime: "",
-      eventDate: ""
+      eventDate: "",
+      categories: []
     };
   },
+  created: function() {
+    this.$axios.get("/events/categories").then(resp => {
+      this.categories = resp.data;
+    });
+  },
   methods: {
-    createTransaction: function() {
+    createEvent: function() {
       const user = this.$store.state.currentUser;
       let amount = parseFloat(this.transactionAmount) * 100;
       if (this.transactionType === "spending") {
