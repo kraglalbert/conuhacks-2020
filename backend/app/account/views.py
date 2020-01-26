@@ -95,7 +95,6 @@ def update_coffee():
     db.session.commit()
     return jsonify(user.serialize)
 
-
 # log out an existing user
 @account.route("/logout")
 @login_required
