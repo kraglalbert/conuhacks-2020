@@ -16,7 +16,6 @@ class EventCategory(enum.Enum):
     field_trip = "Field Trip"
     coffee_date = "Coffee Dates"
 
-
 association_table = db.Table(
     "association",
     db.metadata,
