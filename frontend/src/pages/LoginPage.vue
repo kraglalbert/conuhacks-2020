@@ -240,38 +240,6 @@ export default {
             message: "Sign Up Error"
           });
         });
-
-      // this.$axios
-      //   .post("/account/register", {
-      //     name: this.name,
-      //     email: this.email,
-      //     password: this.password
-      //   })
-      //   .then(res => {
-      //     if (res.status === 200) {
-      //       this.$q.notify({
-      //         color: "green-4",
-      //         position: "top",
-      //         textColor: "white",
-      //         icon: "cloud_done",
-      //         message: "Signed Up Successfully"
-      //       });
-      //       // update application state
-      //       let name = res.data.name;
-      //       let email = this.email;
-      //       this.$store.commit("login", { name, email });
-      //       this.$router.push({ path: "/home" });
-      //     }
-      //   })
-      //   .catch(_err => {
-      //     this.$q.notify({
-      //       color: "red-4",
-      //       position: "top",
-      //       textColor: "white",
-      //       icon: "error",
-      //       message: "Sign Up Error"
-      //     });
-      //   });
     }
   }
 };
