@@ -3,7 +3,26 @@
     <q-splitter v-model="splitterModel">
       <template v-slot:before>
         <div class="q-pa-md">
-          <q-date v-model="date" :events="event_dates" event-color="orange" />
+          <q-date
+            v-if="events_type === 'All'"
+            v-model="date"
+            :events="event_dates"
+            event-color="orange"
+          />
+          <q-date
+            v-else
+            v-model="date"
+            :events="event_dates"
+            event-color="orange"
+          />
+          <q-select
+            borderless
+            v-model="events_type"
+            :options="options"
+            label="Event Type"
+            class="dropdown"
+            @input="updateEvents"
+          />
         </div>
       </template>
 
@@ -36,7 +55,9 @@ export default {
       splitterModel: 50,
       date: moment(new Date()).format("YYYY/MM/DD"),
       events: [],
-      event_dates: []
+      event_dates: [],
+      events_type: "All",
+      options: ["All", "My RSVPs"]
     };
   },
   created: function() {
@@ -52,6 +73,40 @@ export default {
           this.event_dates.push(moment(e.date_time).format("YYYY/MM/DD"));
         });
       });
+  },
+  methods: {
+    updateEvents: function() {
+      if (this.events_type === "All") {
+        this.$axios
+          .get("/events/filter", {
+            params: {
+              company_id: this.$store.state.currentUser.company_id
+            }
+          })
+          .then(resp => {
+            this.events = resp.data;
+            this.event_dates = [];
+            this.events.forEach(e => {
+              this.event_dates.push(moment(e.date_time).format("YYYY/MM/DD"));
+            });
+          });
+      } else {
+        const user = this.$store.state.currentUser;
+        this.$axios.get("/events/user/" + user.id + "/attending").then(resp => {
+          this.events = resp.data;
+          this.event_dates = [];
+          this.events.forEach(e => {
+            this.event_dates.push(moment(e.date_time).format("YYYY/MM/DD"));
+          });
+        });
+      }
+    }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.dropdown {
+  width: 275px;
+}
+</style>

@@ -28,18 +28,19 @@ def get_events_by_host(id):
 
     return jsonify(Event.serialize_list(events))
 
+
 # find a coffee date
 @events.route("/find-coffee-date/<int:id>", methods=["GET"])
 def find_coffee_date(id):
-    if id is None: 
+    if id is None:
         abort(400, "Must specify host ID")
-    
+
     user = User.query.filter_by(id=id).first()
     date = user.find_coffee_date()
 
     if date is None:
-        return jsonify({'result':False})
-    
+        return jsonify({"result": False})
+
     user.coffee_dates = False
     db.session.add(user)
     db.session.commit()
@@ -51,10 +52,10 @@ def find_coffee_date(id):
     datetime_obj = datetime.strptime("31-01-2020 1:30PM", "%d-%m-%Y %I:%M%p")
 
     event = Event(
-        name = "Coffee Date",
+        name="Coffee Date",
         date_time=datetime_obj,
-        category= EventCategory.coffee_date,
-        description = f'Coffee Date with {date.name}',
+        category=EventCategory.coffee_date,
+        description=f"Coffee Date with {date.name}",
         location="Cafeteria",
         host=id,
     )
@@ -151,6 +152,14 @@ def get_events_by_filter():
         )
 
     return jsonify(Event.serialize_list(events))
+
+
+# get all events that a user has RSVP'd for
+@events.route("/user/<int:id>/attending", methods=["GET"])
+def get_all_events_for_user(id):
+    user = User.query.filter_by(id=id).first()
+
+    return jsonify(Event.serialize_list(user.attended_events))
 
 
 # delete event
