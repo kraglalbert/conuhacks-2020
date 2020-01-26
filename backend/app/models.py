@@ -11,10 +11,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 class EventCategory(enum.Enum):
     food_drink_alc = "Food/Drink"
-    food_drink = "Food/Drink Non-Alcoholic"
-    fitness = "Fitness"
-    learn = "Learn"
+    activity = "Activities"
+    learn = "Learning"
     field_trip = "Field Trip"
+    coffee_date = "Coffee Dates"
 
 
 association_table = db.Table(
@@ -39,7 +39,7 @@ class Event(db.Model):
     @staticmethod
     def generate_test_event():
         event = Event(
-            name="Ultimate Frisbee 101", date_time="", category=EventCategory.fitness
+            name="Ultimate Frisbee 101", date_time="", category=EventCategory.activity
         )
         db.session.add(event)
         db.session.commit()

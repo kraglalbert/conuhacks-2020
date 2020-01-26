@@ -53,7 +53,7 @@ def find_coffee_date(id):
     event = Event(
         name = "Coffee Date",
         date_time=datetime_obj,
-        category= EventCategory.food_drink,
+        category= EventCategory.coffee_date,
         description = f'Coffee Date with {date.name}',
         location="Cafeteria",
         host=id,
