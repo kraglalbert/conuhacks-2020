@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="lHh Lpr lFf" id="container">
     <q-header>
       <q-toolbar class="bg-secondary">
         <q-toolbar-title>Welcome to your Wellness Hub</q-toolbar-title>
@@ -18,13 +18,14 @@
       </q-toolbar>
     </q-header>
 
-    <q-page-container id="container">
+    <q-page-container>
       <router-view />
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
+import Activities from "../components/Activity.vue";
 export default {
   name: "MyLayout",
   data() {
