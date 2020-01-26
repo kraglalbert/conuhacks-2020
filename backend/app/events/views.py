@@ -74,6 +74,13 @@ def update_event():
 
     return jsonify(event.serialize)
 
+# get all event categories
+@events.route("/categories", methods=["GET"])
+def get_categories():
+    enum_list = [category.value for category in EventCategory]
+
+    return jsonify(enum_list)
+
 
 # filter events by various criteria
 @events.route("/filter", methods=["GET"])
