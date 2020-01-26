@@ -123,22 +123,22 @@ export default {
   methods: {
     createEvent: function() {
       const user = this.$store.state.currentUser;
-      let amount = parseFloat(this.transactionAmount) * 100;
-      if (this.transactionType === "spending") {
-        amount = amount * -1;
-      }
-      const date = new Date(this.transactionDate);
+      const date_time = moment(
+        new Date(this.eventDate + " " + this.eventTime)
+      ).format("DD-MM-YYYY h:mma");
+      console.log(this.eventTime);
+      console.log(date_time);
+
       const data = {
-        title: this.transactionTitle,
-        source: this.transactionSource,
-        amount: amount,
-        email: user.email,
-        year: date.getFullYear(),
-        month: date.getUTCMonth() + 1,
-        day: date.getUTCDate()
+        event_name: this.eventTitle,
+        description: this.description,
+        location: this.eventLocation,
+        category: this.eventCategory,
+        date_time: date_time,
+        host_email: this.$store.state.currentUser.email
       };
       this.$axios
-        .post("/transactions/create", data, {
+        .post("/events", data, {
           headers: {
             Authorization: this.$store.state.token
           }
@@ -149,7 +149,7 @@ export default {
             position: "top",
             textColor: "white",
             icon: "cloud_done",
-            message: "Transaction Added Successfully"
+            message: "Event Created Successfully"
           });
           // let parent know to close the dialog
           this.$emit("dialog-closed");
