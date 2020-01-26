@@ -5,11 +5,14 @@
         <q-toolbar-title>Welcome to your Wellness Hub</q-toolbar-title>
 
         <div>
-          <q-btn icon="home" color="secondary" to="/dashboard"/>
+          <q-btn
+            icon="home"
+            color="secondary"
+            to="/home"
+          />
         </div>
       </q-toolbar>
     </q-header>
-
 
     <q-page-container>
       <router-view />
@@ -20,7 +23,7 @@
 <script>
 export default {
   name: "MyLayout",
-  data() {
+  data () {
     return {
       leftDrawerOpen: false
     };
