@@ -44,7 +44,6 @@ export default {
 <style lang="scss" scoped>
 #container {
   background-color: $background;
-  height: 100%;
   overflow: hidden !important;
 }
 </style>

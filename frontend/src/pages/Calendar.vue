@@ -57,11 +57,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-// #q-app {
-//   background-color: #ffeadb !important;
-//   height: 100vh; /* or min-height:100vh if you want it to grow */
-//   display: flex;
-// }
-</style>
