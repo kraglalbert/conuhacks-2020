@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div class="text-h4 q-mb">{{event.name}}</div>
-        <p>{{event.description}}</p>
+        <div class="text-h4 q-mb " >{{event.name}}</div>
+        <p class="bg-">{{event.description}}</p>
     </div>
 </template>
 

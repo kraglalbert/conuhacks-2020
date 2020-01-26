@@ -22,7 +22,7 @@
           transition-prev="jump-up"
           transition-next="jump-up"
         >
-            <q-tab-panel :name="date">
+            <q-tab-panel class="bg-accent" :name="date">
                 <CalendarItemList :events="events" :date="date" />
             </q-tab-panel>
         </q-tab-panels>
