@@ -90,6 +90,8 @@ const Store = new Vuex.Store({
         AXIOS.post("/account/register", {
           name: user.name,
           email: user.email,
+          company: user.company,
+          location: user.location,
           password: user.password
         })
           .then(resp => {

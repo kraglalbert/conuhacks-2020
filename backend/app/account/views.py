@@ -56,34 +56,45 @@ def register():
 
     company_id = Company.validate_company(company, location).id
 
-    new_user = User(name=name, email=email, password=password, coffee_dates=False, company=company_id)
+    new_user = User(
+        name=name,
+        email=email,
+        password=password,
+        coffee_dates=False,
+        company=company_id,
+    )
 
     db.session.add(new_user)
     db.session.commit()
-    return jsonify(new_user.serialize)
+
+    login_user(new_user)
+    token = new_user.generate_auth_token()
+    return jsonify({"user": new_user.serialize, "token": token.decode("ascii")})
+
 
 # register for coffee dates
 @account.route("/coffee", methods=["POST"])
 def update_coffee():
-        data = request.get_json(force=True)
-        id = data.get("id")
-        coffee = data.get("coffee")
+    data = request.get_json(force=True)
+    id = data.get("id")
+    coffee = data.get("coffee")
 
-        if id == "":
-            abort(400, "Need user ID to update coffee dates.")
+    if id == "":
+        abort(400, "Need user ID to update coffee dates.")
 
-        user = User.query.filter_by(id=id).first()
-        if user is None:
-            abort(400, "No user with this ID exists")
-        
-        if coffee == 'true':
-            user.coffee_dates = True
-        else:
-            user.coffee_dates = False
+    user = User.query.filter_by(id=id).first()
+    if user is None:
+        abort(400, "No user with this ID exists")
 
-        db.session.add(user)
-        db.session.commit()
-        return jsonify(user.serialize)
+    if coffee == "true":
+        user.coffee_dates = True
+    else:
+        user.coffee_dates = False
+
+    db.session.add(user)
+    db.session.commit()
+    return jsonify(user.serialize)
+
 
 # log out an existing user
 @account.route("/logout")

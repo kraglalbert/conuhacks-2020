@@ -29,21 +29,5 @@ export default {
     itemName: String,
     image: String
   },
-  framework: {
-    components: [
-      'QBtn'
-    ]
-  }
 }
 </script>
-
-<style scoped lang="scss">
-h6 {
-  margin: 10px;
-}
-#container {
-  width: 15%;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-</style>

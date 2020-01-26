@@ -1,10 +1,12 @@
 <template>
   <q-layout>
     <q-page-container>
-      <q-banner class="bg-primary" style="background-color: #ee8572"></q-banner>
-      <q-page class="flex column flex-center">
-        <div class="q-gutter-y-md" style="min-width: 300px">
-          <!-- ee8572 -->
+      <q-banner class="login_banner">
+        <div style="font-size: 25px; font-weight: bold;">Wellness Hub</div>
+      </q-banner>
+
+      <q-page class="flex column flex-center login_page">
+        <div class="q-gutter-y-md" style="min-width: 400px">
           <q-card>
             <q-tabs
               v-model="tab"
@@ -51,7 +53,7 @@
                   />
 
                   <div>
-                    <q-btn label="Log In" type="submit" color="primary" />
+                    <q-btn label="Log In" type="submit" style="background:#678a74; color:white" />
                   </div>
                 </q-form>
               </q-tab-panel>
@@ -68,7 +70,6 @@
                       val => (val && val.length > 0) || 'Please enter your name'
                     ]"
                   />
-
                   <q-input
                     filled
                     v-model="email"
@@ -80,7 +81,28 @@
                         (val && val.length > 0) || 'Please enter your email'
                     ]"
                   />
-
+                  <q-input
+                    filled
+                    v-model="location"
+                    label="Location"
+                    hint="Enter your location"
+                    lazy-rules
+                    :rules="[
+                      val =>
+                        (val && val.length > 0) || 'Please enter your location'
+                    ]"
+                  />
+                  <q-input
+                    filled
+                    v-model="company"
+                    label="Company"
+                    hint="Enter your company"
+                    lazy-rules
+                    :rules="[
+                      val =>
+                        (val && val.length > 0) || 'Please enter your company'
+                    ]"
+                  />
                   <q-input
                     filled
                     v-model="password"
@@ -111,7 +133,7 @@
                   />
 
                   <div>
-                    <q-btn label="Sign Up" type="submit" color="primary" />
+                    <q-btn label="Sign Up" type="submit" style="background:#678a74; color:white" />
                   </div>
                 </q-form>
               </q-tab-panel>
@@ -132,6 +154,8 @@ export default {
       email: null,
       password: null,
       confirm_password: null,
+      company: null,
+      location: null,
       tab: "login"
     };
   },
@@ -162,27 +186,22 @@ export default {
         });
     },
     onSignUp() {
-      this.$axios
-        .post("/account/register", {
-          name: this.name,
-          email: this.email,
-          password: this.password
-        })
-        .then(res => {
-          if (res.status === 200) {
-            this.$q.notify({
-              color: "green-4",
-              position: "top",
-              textColor: "white",
-              icon: "cloud_done",
-              message: "Signed Up Successfully"
-            });
-            // update application state
-            let name = res.data.name;
-            let email = this.email;
-            this.$store.commit("login", { name, email });
-            this.$router.push({ path: "/home" });
-          }
+      let name = this.name;
+      let email = this.email;
+      let password = this.password;
+      let company = this.company;
+      let location = this.location;
+      this.$store
+        .dispatch("register", { name, email, password, company, location })
+        .then(() => {
+          this.$q.notify({
+            color: "green-4",
+            position: "top",
+            textColor: "white",
+            icon: "cloud_done",
+            message: "Registered successfully"
+          });
+          this.$router.push({ path: "/home" });
         })
         .catch(_err => {
           this.$q.notify({
@@ -197,3 +216,13 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.login_banner {
+  background-color: $secondary;
+  color: white;
+}
+.login_page {
+  background-color: $background;
+}
+</style>

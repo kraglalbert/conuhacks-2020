@@ -1,23 +1,38 @@
 const routes = [
   {
-    path: "",
-    redirect: "/home"
-  },
-  // {
-  //   path: "/home",
-  //   component: () => import("layouts/MainLayout.vue"),
-  //   meta: { requiresAuth: true },
-  //   children: [{ path: "", component: () => import("pages/HomePage.vue") }]
-  // },
-  {
-    path: "/login",
+    path: "/",
     component: () => import("pages/LoginPage.vue"),
     children: []
   },
   {
-    path: "/",
+    path: "/home",
     component: () => import("layouts/MyLayout.vue"),
     children: [{ path: "", component: () => import("pages/Dashboard.vue") }]
+  },
+  {
+    path: "/calendar",
+    component: () => import("layouts/MyLayout.vue"),
+    children: [{ path: "", component: () => import("pages/Calendar.vue") }]
+  },
+  {
+    path: "/dining",
+    component: () => import("layouts/MyLayout.vue"),
+    children: [{ path: "", component: () => import("pages/Dining.vue") }]
+  },
+  {
+    path: "/coffee",
+    component: () => import("layouts/MyLayout.vue"),
+    children: [{ path: "", component: () => import("pages/Coffee.vue") }]
+  },
+  {
+    path: "/activities",
+    component: () => import("layouts/MyLayout.vue"),
+    children: [{ path: "", component: () => import("pages/Activities.vue") }]
+  },
+  {
+    path: "/learning",
+    component: () => import("layouts/MyLayout.vue"),
+    children: [{ path: "", component: () => import("pages/Learning.vue") }]
   }
 ];
 

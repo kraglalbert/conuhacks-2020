@@ -1,22 +1,55 @@
 <template>
-  <q-page class="flex center row q-gutter-md">
-    <div class="row q-gutter-md"> 
-      <div class="col"> 
-        <q-btn icon="rowing" label="Activities" stack color="dark" />
-      </div>
-      <div class="col"> 
-        <q-btn icon="accessibility" label="Learning" stack class="col" color="dark" />
-      </div>
-    </div>
+  <q-page class="flex flex-center q-gutter-md">
     <div class="row q-gutter-md">
-      <div class="col"> 
-        <q-btn icon="local_cafe" label="Coffee Date" stack class="col" color="dark" />
+      <div class="col">
+        <q-btn
+          icon="rowing"
+          label="Activities"
+          class="dashboard-button"
+          stack
+          color="primary"
+          to="/activities"
+        />
       </div>
-      <div class="col"> 
-        <q-btn icon="local_dining" label="Dining / Drinks" stack class="col" color="dark" />
+      <div class="col">
+        <q-btn
+          icon="accessibility"
+          label="Learning"
+          class="dashboard-button"
+          stack
+          color="primary"
+          to="/learning"
+        />
       </div>
-      <div class="col"> 
-        <q-btn icon="calendar_today" label="Calendar" stack class="col" color="dark" />
+      <div class="col">
+        <q-btn
+          icon="local_cafe"
+          label="Coffee Date"
+          class="dashboard-button"
+          stack
+          color="primary"
+          to="/coffee"
+        />
+      </div>
+      <div class="col">
+        <q-btn
+          icon="local_dining"
+          label="Dining / Drinks"
+          stack
+          class="dashboard-button"
+          color="primary"
+          to="/dining"
+        />
+      </div>
+      <div class="col">
+        <q-btn
+          icon="calendar_today"
+          label="Calendar"
+          stack
+          class="dashboard-button"
+          color="primary"
+          to="/calendar"
+        />
       </div>
     </div>
   </q-page>
@@ -28,3 +61,10 @@ export default {
   name: 'Dashboard'
 }
 </script>
+
+<style lang="scss" scoped>
+.dashboard-button {
+  width: 180px;
+  height: 120px;
+}
+</style>
