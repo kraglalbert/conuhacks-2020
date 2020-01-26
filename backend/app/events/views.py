@@ -168,18 +168,26 @@ def delete_event():
     data = request.get_json(force=True)
     event_id = int(data.get("event_id"))
     host_id = int(data.get("host_id"))
-    print("hiiiiiiiii")
 
     event = Event.query.filter_by(id=event_id).first()
 
-    if event.host != host_id:
-        abort(400, "Event can only be deleted by the host of the event")
-
-    if Event.query.filter_by(id=event_id).first is None:
+    if event is None:
         abort(400, "There are no events with this ID.")
 
-    event = Event.query.filter_by(id=event_id)
+    if event.host != host_id:
+        abort(400, "Event can only be deleted by the host of the event")
+    
+    cur_attendees = event.attendees
+    for attendee in cur_attendees:
+        attendee_events = attendee.attended_events
+        attendee_events.remove(event)
+        attendee.attended_events = attendee_events
+        db.session.commit()
+
     Event.query.filter_by(id=event_id).delete()
+    db.session.commit()
+
+    
 
     return jsonify({"result": True})
 
