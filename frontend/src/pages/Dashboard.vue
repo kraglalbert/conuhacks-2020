@@ -89,10 +89,11 @@ export default {
 
 <style lang="scss" scoped>
 .dashboard-button {
-  width: 100%;
-  height: 100%;
+  width: 180px;
+  height: 120px;
 }
 .host-button {
   margin-top: 5%;
+  padding: 10px;
 }
 </style>
