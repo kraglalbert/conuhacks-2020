@@ -39,14 +39,31 @@ def find_coffee_date(id):
 
     if date is None:
         return jsonify({'result':False})
-    else:
-        user.coffee = False
-        db.session.add(user)
-        db.session.commit()
-        date.coffee = False
-        db.session.add(date)
-        db.session.commit()
-        return jsonify(date.serialize)
+    
+    user.coffee_dates = False
+    db.session.add(user)
+    db.session.commit()
+    date.coffee_dates = False
+    db.session.add(date)
+    db.session.commit()
+
+    # format: 12-12-2019 1:30PM
+    datetime_obj = datetime.strptime("31-01-2020 1:30PM", "%d-%m-%Y %I:%M%p")
+
+    event = Event(
+        name = "Coffee Date",
+        date_time=datetime_obj,
+        category= EventCategory.food_drink,
+        description = f'Coffee Date with {date.name}',
+        location="Cafeteria",
+        host=id,
+    )
+
+    event.attendees.append(date)
+    db.session.add(event)
+    db.session.commit()
+
+    return jsonify(event.serialize)
 
 
 # update an event
