@@ -11,12 +11,13 @@ def get_all_events():
     events = Event.query.all()
     return jsonify(Event.serialize_list(events))
 
-# get hosted events 
+
+# get hosted events
 @events.route("/event-by-host/<int:id>", methods=["GET"])
 def get_events_by_host(id):
     events = []
 
-    if id is None: 
+    if id is None:
         abort(400, "Must specify host ID")
 
     user = User.query.filter_by(id=id).first()
@@ -94,6 +95,7 @@ def update_event():
 
     return jsonify(event.serialize)
 
+
 # get all event categories
 @events.route("/categories", methods=["GET"])
 def get_categories():
@@ -149,11 +151,12 @@ def delete_event():
 
     if Event.query.filter_by(id=event_id).first is None:
         abort(400, "There are no events with this ID.")
-    
+
     event = Event.query.filter_by(id=event_id)
     Event.query.filter_by(id=event_id).delete()
 
-    return jsonify({'result':True})
+    return jsonify({"result": True})
+
 
 # create a new event
 @events.route("", methods=["POST"])
@@ -185,6 +188,8 @@ def create_event():
         name=event_name,
         date_time=datetime_obj,
         category=EventCategory(category),
+        description=description,
+        location=location,
         host=host.id,
     )
     db.session.add(new_event)

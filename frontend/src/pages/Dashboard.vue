@@ -60,17 +60,30 @@
             stack
             class="host-button"
             color="primary"
-            to="/host-event"
+            @click="showHostEventPopUp = true"
           />
         </div>
       </div>
     </div>
+    <q-dialog v-model="showHostEventPopUp">
+      <HostEventPopUp @dialog-closed="showHostEventPopUp = false" />
+    </q-dialog>
   </q-page>
 </template>
 
 <script>
+import HostEventPopUp from "../components/HostEventPopUp.vue";
+
 export default {
-  name: "Dashboard"
+  name: "Dashboard",
+  components: {
+    HostEventPopUp
+  },
+  data() {
+    return {
+      showHostEventPopUp: false
+    };
+  }
 };
 </script>
 
@@ -81,5 +94,6 @@ export default {
 }
 .host-button {
   margin-top: 5%;
+  padding: 10px;
 }
 </style>

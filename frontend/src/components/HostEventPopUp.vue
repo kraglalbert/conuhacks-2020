@@ -1,65 +1,81 @@
 <template>
-  <q-card>
+  <q-card class="event-popup">
     <q-card-section class="row items-center">
-      <div class="text-h6">Add New Transaction</div>
+      <div class="text-h6">Add New Event</div>
       <q-space />
       <q-btn icon="close" flat round dense v-close-popup />
     </q-card-section>
 
     <q-card-section>
-      <q-form @submit="createTransaction" class="q-gutter-sm">
+      <q-form @submit="createEvent" class="q-gutter-sm">
         <q-input
           filled
-          v-model="transactionTitle"
-          label="Transaction Title"
+          v-model="eventTitle"
+          label="Event Title"
           lazy-rules
           :rules="[
-            val => (val && val.length > 0) || 'Please enter a transaction title'
+            val => (val && val.length > 0) || 'Please enter an event title'
           ]"
         />
 
         <q-input
+          v-model="description"
           filled
-          v-model="transactionSource"
-          label="Source"
-          lazy-rules
-          :rules="[val => (val && val.length > 0) || 'Please enter a source']"
-        />
-
-        <q-input
-          filled
-          v-model="transactionAmount"
-          label="Amount"
-          mask="#.##"
-          fill-mask="0"
-          reverse-fill-mask
-          prefix="$"
+          type="textarea"
+          label="Event Description"
           lazy-rules
           :rules="[
+            val => (val && val.length > 0) || 'Please enter a description',
             val =>
-              (val !== null && val !== '') ||
-              'Please enter the transaction amount',
-            val => val > 0 || 'Amount cannot be negative or zero'
+              (val && val.length < 64) ||
+              'Descriptions must be less than 64 characters'
           ]"
         />
 
-        <div>
-          <q-btn-toggle
-            v-model="transactionType"
-            class="my-custom-toggle"
-            no-caps
-            unelevated
-            toggle-color="primary"
-            color="white"
-            text-color="primary"
-            :options="[
-              { label: 'Spending', value: 'spending' },
-              { label: 'Profit', value: 'profit' }
-            ]"
-          />
-        </div>
+        <q-select
+          v-model="eventCategory"
+          filled
+          :options="categories"
+          label="Event Category"
+          lazy-rules
+          :rules="[
+            val => (val && val.length > 0) || 'Please enter an event category'
+          ]"
+        />
 
-        <q-input filled v-model="transactionDate" mask="date" :rules="['date']">
+        <q-input
+          filled
+          v-model="eventLocation"
+          label="Event Location"
+          lazy-rules
+          :rules="[
+            val => (val && val.length > 0) || 'Please enter an event location'
+          ]"
+        />
+
+        <q-input
+          filled
+          v-model="eventTime"
+          label="Time"
+          mask="time"
+          :rules="['time']"
+        >
+          <template v-slot:append>
+            <q-icon name="access_time" class="cursor-pointer">
+              <q-popup-proxy transition-show="scale" transition-hide="scale">
+                <q-time v-model="eventTime" />
+              </q-popup-proxy>
+            </q-icon>
+          </template>
+        </q-input>
+
+        <q-input
+          filled
+          v-model="eventDate"
+          label="Date"
+          mask="date"
+          :rules="['date']"
+        >
           <template v-slot:append>
             <q-icon name="event" class="cursor-pointer">
               <q-popup-proxy
@@ -68,7 +84,7 @@
                 transition-hide="scale"
               >
                 <q-date
-                  v-model="transactionDate"
+                  v-model="eventDate"
                   @input="() => $refs.qDateProxy.hide()"
                 />
               </q-popup-proxy>
@@ -84,36 +100,45 @@
 
 <script>
 import moment from "moment";
+
 export default {
-  name: "HomeNewTransactionPopup",
+  name: "HostEventPopup",
   data() {
     return {
-      transactionType: "spending",
-      transactionDate: moment(new Date()).format("YYYY/MM/DD"),
-      transactionTitle: "",
-      transactionSource: "",
-      transactionAmount: ""
+      eventDate: moment(new Date()).format("YYYY/MM/DD"),
+      description: "",
+      eventTitle: "",
+      eventCategory: "",
+      eventLocation: "",
+      eventTime: "",
+      eventDate: "",
+      categories: []
     };
   },
+  created: function() {
+    this.$axios.get("/events/categories").then(resp => {
+      this.categories = resp.data;
+    });
+  },
   methods: {
-    createTransaction: function() {
+    createEvent: function() {
       const user = this.$store.state.currentUser;
-      let amount = parseFloat(this.transactionAmount) * 100;
-      if (this.transactionType === "spending") {
-        amount = amount * -1;
-      }
-      const date = new Date(this.transactionDate);
+      const date_time = moment(
+        new Date(this.eventDate + " " + this.eventTime)
+      ).format("DD-MM-YYYY h:mma");
+      console.log(this.eventTime);
+      console.log(date_time);
+
       const data = {
-        title: this.transactionTitle,
-        source: this.transactionSource,
-        amount: amount,
-        email: user.email,
-        year: date.getFullYear(),
-        month: date.getUTCMonth() + 1,
-        day: date.getUTCDate()
+        event_name: this.eventTitle,
+        description: this.description,
+        location: this.eventLocation,
+        category: this.eventCategory,
+        date_time: date_time,
+        host_email: this.$store.state.currentUser.email
       };
       this.$axios
-        .post("/transactions/create", data, {
+        .post("/events", data, {
           headers: {
             Authorization: this.$store.state.token
           }
@@ -124,7 +149,7 @@ export default {
             position: "top",
             textColor: "white",
             icon: "cloud_done",
-            message: "Transaction Added Successfully"
+            message: "Event Created Successfully"
           });
           // let parent know to close the dialog
           this.$emit("dialog-closed");
@@ -142,3 +167,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.event-popup {
+  min-width: 500px;
+}
+</style>
