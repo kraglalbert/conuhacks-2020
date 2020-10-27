@@ -7,7 +7,7 @@ bonjour-py==0.3
 cffi==1.12.2
 Click==7.0
 configparser==3.5.0
-cryptography==2.6.1
+cryptography==3.2
 enum34==1.1.6
 Flask==1.1.1
 future==0.17.1
